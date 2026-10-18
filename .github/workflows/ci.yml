@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    name: Pruebas (Node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ["18", "20", "22"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Dependencias de desarrollo
+        run: npm ci
+      - name: Sintaxis y manifest
+        run: npm run check
+      - name: Pruebas
+        run: npm test
+
+  package:
+    name: Empaquetar para las tiendas
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Regenerar iconos y verificar que están al día
+        run: |
+          python3 tools/make-icons.py
+          git diff --exit-code -- icons
+      - name: Crear el ZIP de envío
+        run: |
+          zip -r verifactu-qr-extension.zip manifest.json popup.html styles.css src vendor icons README.md PRIVACY.md LICENSE
+          unzip -l verifactu-qr-extension.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: verifactu-qr-extension
+          path: verifactu-qr-extension.zip
+          if-no-files-found: error

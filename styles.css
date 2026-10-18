@@ -1,0 +1,72 @@
+:root {
+  --azul: #1d4ed8;
+  --azul-oscuro: #0f172a;
+  --gris: #64748b;
+  --borde: #e2e8f0;
+  --rojo: #b91c1c;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  width: 380px;
+  margin: 0;
+  padding: 14px;
+  font: 13px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--azul-oscuro);
+  background: #fff;
+}
+
+header h1 { margin: 0; font-size: 16px; }
+header .sub { margin: 2px 0 12px; color: var(--gris); font-size: 11px; }
+
+label { display: block; font-weight: 600; font-size: 11.5px; margin-bottom: 8px; }
+
+input, select, textarea {
+  width: 100%;
+  margin-top: 3px;
+  padding: 6px 8px;
+  font: inherit;
+  color: inherit;
+  border: 1px solid var(--borde);
+  border-radius: 6px;
+  background: #f8fafc;
+}
+
+input:focus, select:focus, textarea:focus { outline: 2px solid var(--azul); background: #fff; }
+
+.row { display: flex; gap: 8px; }
+.row > label { flex: 1; }
+
+.actions { display: flex; gap: 6px; margin: 4px 0 2px; }
+button {
+  font: inherit;
+  padding: 7px 10px;
+  border: 1px solid var(--borde);
+  border-radius: 6px;
+  background: #f1f5f9;
+  cursor: pointer;
+}
+button.primary { background: var(--azul); border-color: var(--azul); color: #fff; font-weight: 600; }
+button:hover { filter: brightness(0.97); }
+
+.errores { margin-top: 10px; padding: 8px 10px; border-left: 3px solid var(--rojo); background: #fef2f2; }
+.errores h2 { margin: 0 0 4px; font-size: 12px; color: var(--rojo); }
+.errores ul { margin: 0; padding-left: 16px; }
+
+.salida { display: flex; gap: 12px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--borde); }
+.qr { flex: 0 0 auto; }
+.qr img, .qr canvas { display: block; border: 1px solid var(--borde); border-radius: 6px; }
+.datos { flex: 1; min-width: 0; }
+.datos h2 { margin: 0 0 4px; font-size: 12px; }
+textarea { font: 11px/1.4 ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; background: #fff; }
+.acciones-salida { display: flex; align-items: center; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
+.pista { margin: 6px 0 0; color: var(--gris); font-size: 11px; }
+
+.info { margin-top: 12px; font-size: 11.5px; color: #334155; }
+.info summary { cursor: pointer; font-weight: 600; }
+.info ul { margin: 6px 0 0; padding-left: 16px; }
+.info code { background: #f1f5f9; padding: 0 3px; border-radius: 3px; }
+
+footer { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--borde); font-size: 11px; color: var(--gris); }
+footer a { color: var(--azul); }

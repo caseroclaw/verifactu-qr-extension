@@ -1,0 +1,32 @@
+{
+  "name": "verifactu-qr-extension",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Extensión de navegador que genera la URL y el QR tributario de VeriFactu (RD 1007/2023) desde los datos de la factura.",
+  "type": "module",
+  "license": "MIT",
+  "homepage": "https://plataformaia.com/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/caseroclaw/verifactu-qr-extension.git"
+  },
+  "scripts": {
+    "test": "node --test tests/verifactu.test.js tests/package.test.js tests/qr-roundtrip.test.js",
+    "check": "node --check src/verifactu.js && node --check src/popup.js && node tools/check-manifest.js",
+    "icons": "python3 tools/make-icons.py",
+    "package": "zip -r -FS verifactu-qr-extension.zip manifest.json popup.html styles.css src vendor icons README.md PRIVACY.md LICENSE"
+  },
+  "keywords": [
+    "verifactu",
+    "qr",
+    "aeat",
+    "facturacion",
+    "espana",
+    "extension",
+    "edge-addons",
+    "firefox"
+  ],
+  "devDependencies": {
+    "jsqr": "^1.4.0"
+  }
+}

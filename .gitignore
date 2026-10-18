@@ -1,0 +1,4 @@
+verifactu-qr-extension.zip
+node_modules/
+*.xpi
+.DS_Store

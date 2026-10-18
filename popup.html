@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>VeriFactu QR</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>VeriFactu QR</h1>
+    <p class="sub">URL y QR tributario de la factura — RD 1007/2023 y Orden HAC/1177/2024</p>
+  </header>
+
+  <main>
+    <form id="form" novalidate>
+      <label>NIF / NIE / CIF del emisor
+        <input id="nif" name="nif" value="89890001K" autocomplete="off" spellcheck="false" placeholder="B12345678">
+      </label>
+
+      <label>Número de serie de la factura
+        <input id="numserie" name="numserie" value="12345678&amp;G33" autocomplete="off" spellcheck="false" placeholder="2026-A/0042">
+      </label>
+
+      <div class="row">
+        <label>Fecha de expedición
+          <input id="fecha" name="fecha" value="01-01-2024" autocomplete="off" spellcheck="false" placeholder="DD-MM-AAAA">
+        </label>
+        <label>Importe total (€)
+          <input id="importe" name="importe" value="241,40" autocomplete="off" spellcheck="false" placeholder="121,00">
+        </label>
+      </div>
+
+      <div class="row">
+        <label>Entorno
+          <select id="entorno">
+            <option value="produccion">Producción</option>
+            <option value="pruebas">Pruebas (preproducción)</option>
+          </select>
+        </label>
+        <label>Sistema
+          <select id="verifactu">
+            <option value="true">VERI*FACTU</option>
+            <option value="false">No VERI*FACTU</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="actions">
+        <button type="submit" class="primary">Generar QR</button>
+        <button type="button" id="ejemplo">Ejemplo AEAT</button>
+        <button type="button" id="limpiar">Limpiar</button>
+      </div>
+    </form>
+
+    <section id="errores" class="errores" hidden>
+      <h2>Errores de validación</h2>
+      <ul id="lista-errores"></ul>
+    </section>
+
+    <section id="salida" class="salida" hidden>
+      <div class="qr" id="qr"></div>
+      <div class="datos">
+        <h2>URL del QR</h2>
+        <textarea id="url" rows="5" readonly spellcheck="false"></textarea>
+        <div class="acciones-salida">
+          <button type="button" id="copiar">Copiar URL</button>
+          <a id="abrir" href="#" target="_blank" rel="noopener">Abrir consulta en la AEAT</a>
+        </div>
+        <p class="pista" id="pista"></p>
+      </div>
+    </section>
+
+    <details class="info">
+      <summary>Cómo se usa y qué valida</summary>
+      <ul>
+        <li>Pega los cuatro datos del registro de facturación: NIF del emisor, número de serie, fecha (DD-MM-AAAA) e importe total.</li>
+        <li>La URL resultante es la que debe codificarse en el QR impreso en la factura. El parámetro <code>formato=json</code> nunca va dentro del QR.</li>
+        <li>Se valida el dígito de control de NIF/NIE/CIF y se replican los códigos de error de la AEAT 2001-2006.</li>
+        <li>Todo se calcula en tu navegador: la extensión no pide permisos y no envía datos a ningún servidor.</li>
+      </ul>
+    </details>
+  </main>
+
+  <footer>
+    Hecho por <a href="https://plataformaia.com/" target="_blank" rel="noopener">Plataforma IA</a> ·
+    <a href="https://plataformaia.com/es/blog/verifactu-2027-pymes-fechas-preparacion" target="_blank" rel="noopener">Guía VeriFactu 2027</a> ·
+    <a href="https://github.com/caseroclaw/verifactu-qr" target="_blank" rel="noopener">CLI y servidor MCP</a>
+  </footer>
+
+  <script src="vendor/qrcode.js"></script>
+  <script type="module" src="src/popup.js"></script>
+</body>
+</html>

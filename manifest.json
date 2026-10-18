@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "VeriFactu QR — Generador de QR tributario",
+  "short_name": "VeriFactu QR",
+  "version": "1.0.0",
+  "description": "Genera la URL y el QR tributario de VeriFactu (RD 1007/2023, Orden HAC/1177/2024) desde los datos de la factura. Validación NIF/NIE/CIF y códigos de error de la AEAT. Sin permisos, sin servidores, sin datos.",
+  "author": "Plataforma IA",
+  "homepage_url": "https://plataformaia.com/",
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "VeriFactu QR"
+  },
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "permissions": [],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "verifactu-qr@plataformaia.com",
+      "strict_min_version": "115.0"
+    }
+  }
+}
