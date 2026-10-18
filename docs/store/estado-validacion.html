@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Estado: validación</title>
+  <style>html,body{margin:0;width:380px;height:640px;overflow:hidden}iframe{width:380px;height:640px;border:0}</style>
+</head>
+<body>
+  <iframe id="popup" src="../../popup.html"></iframe>
+  <script>
+    document.getElementById('popup').addEventListener('load', () => {
+      const d = document.getElementById('popup').contentDocument;
+      const set = (id, valor) => {
+        const el = d.getElementById(id);
+        el.value = valor;
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+      };
+      set('nif', '89890001J');       // dígito de control incorrecto
+      set('numserie', '2026-A/0042');
+      set('fecha', '15/03/2026');     // formato incorrecto
+      set('importe', '12,345');       // tres decimales
+    });
+  </script>
+</body>
+</html>

@@ -59,7 +59,8 @@ button:hover { filter: brightness(0.97); }
 .qr img, .qr canvas { display: block; border: 1px solid var(--borde); border-radius: 6px; }
 .datos { flex: 1; min-width: 0; }
 .datos h2 { margin: 0 0 4px; font-size: 12px; }
-textarea { font: 11px/1.4 ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; background: #fff; }
+textarea { font: 11px/1.4 ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; background: #fff; word-break: break-all; }
+#url { resize: vertical; }
 .acciones-salida { display: flex; align-items: center; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
 .pista { margin: 6px 0 0; color: var(--gris); font-size: 11px; }
 

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>VeriFactu QR — captura 1280x800 para las tiendas</title>
+  <style>
+    html, body { margin: 0; width: 1280px; height: 800px; overflow: hidden; }
+    .lienzo {
+      width: 1280px;
+      height: 800px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 56px;
+      font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      color: #0f172a;
+      background: linear-gradient(135deg, #eef2ff 0%, #f8fafc 55%, #e0f2fe 100%);
+    }
+    .texto { width: 540px; }
+    .texto h1 { margin: 0 0 12px; font-size: 40px; line-height: 1.15; letter-spacing: -0.5px; }
+    .texto p { margin: 0 0 16px; font-size: 19px; color: #334155; }
+    .texto ul { margin: 0; padding-left: 20px; font-size: 17px; color: #334155; }
+    .texto li { margin-bottom: 7px; }
+    .texto code { background: #e2e8f0; padding: 0 4px; border-radius: 4px; font-size: 15px; }
+    .marca { margin-top: 20px; font-size: 16px; color: #1d4ed8; font-weight: 600; }
+    .ventana {
+      width: 380px;
+      height: 620px;
+      border-radius: 12px;
+      background: #fff;
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.22);
+      overflow: hidden;
+    }
+    iframe { width: 380px; height: 620px; border: 0; }
+  </style>
+</head>
+<body>
+  <div class="lienzo">
+    <div class="texto">
+      <h1>El QR tributario de VeriFactu, sin hojas de cálculo</h1>
+      <p>Escribe el NIF, el número de serie, la fecha y el importe: la extensión devuelve la URL exacta que exige la AEAT y el QR listo para la factura.</p>
+      <ul>
+        <li>Validación de NIF, NIE y CIF con dígito de control</li>
+        <li>URL encoding idéntico al de <code>java.net.URLEncoder</code></li>
+        <li>Códigos de error 2001-2006 de la AEAT</li>
+        <li>Sin permisos, sin servidores, sin telemetría</li>
+      </ul>
+      <div class="marca">Plataforma IA · plataformaia.com</div>
+    </div>
+    <div class="ventana">
+      <iframe id="popup" src="../../popup.html" title="VeriFactu QR"></iframe>
+    </div>
+  </div>
+  <script>
+    document.getElementById('popup').addEventListener('load', () => {
+      const boton = document.getElementById('popup').contentDocument.getElementById('ejemplo');
+      if (boton) boton.click();
+    });
+  </script>
+</body>
+</html>

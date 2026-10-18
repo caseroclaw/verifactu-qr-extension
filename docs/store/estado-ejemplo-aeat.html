@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Estado: ejemplo oficial de la AEAT</title>
+  <style>html,body{margin:0;width:380px;height:640px;overflow:hidden}iframe{width:380px;height:640px;border:0}</style>
+</head>
+<body>
+  <iframe id="popup" src="../../popup.html"></iframe>
+  <script>
+    const marco = document.getElementById('popup');
+    marco.addEventListener('load', () => {
+      const d = marco.contentDocument;
+      const boton = d.getElementById('ejemplo');
+      if (boton) boton.click();
+    });
+  </script>
+</body>
+</html>
