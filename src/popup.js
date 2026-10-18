@@ -1,11 +1,21 @@
 /**
- * Interfaz de la extensión: lee el formulario, construye la URL del QR y lo dibuja.
- * Sin permisos de navegador, sin red, sin almacenamiento.
+ * Interfaz de la extensión: lee el formulario, valida los cuatro datos, construye
+ * la URL del QR y lo dibuja. Sin permisos de navegador, sin red, sin almacenamiento.
  */
-import { buildQrUrl, formatearImporte, tipoNif, urlConsultaJson, QRError } from './verifactu.js';
+import {
+  buildQrUrl,
+  formatearFecha,
+  formatearImporte,
+  formatearNumserie,
+  tipoNif,
+  validarNif,
+  urlConsultaJson,
+  QRError,
+} from './verifactu.js';
 
 const $ = (id) => document.getElementById(id);
 const form = $('form');
+const CAMPOS = ['nif', 'numserie', 'fecha', 'importe'];
 
 function leerCampos() {
   return {
@@ -18,76 +28,79 @@ function leerCampos() {
   };
 }
 
-function pintarErrores(mensajes) {
+/** Valida los cuatro datos a la vez y devuelve los errores con su código AEAT. */
+function validarCampos(campos) {
+  const errores = [];
+  const valor = {};
+  const comprobar = (clave, fn, entrada) => {
+    try {
+      valor[clave] = fn(entrada);
+    } catch (e) {
+      if (e instanceof QRError) errores.push(e);
+      else errores.push(new QRError(2000, String(e && e.message ? e.message : e)));
+    }
+  };
+  comprobar('nif', validarNif, campos.nif);
+  comprobar('numserie', formatearNumserie, campos.numserie);
+  comprobar('fecha', formatearFecha, campos.fecha);
+  comprobar('importe', formatearImporte, campos.importe);
+  return { errores, valor };
+}
+
+function pintarErrores(errores) {
   const caja = $('errores');
   const lista = $('lista-errores');
   lista.textContent = '';
-  if (!mensajes.length) {
-    caja.hidden = true;
-    return;
-  }
-  for (const m of mensajes) {
+  for (const error of errores) {
     const li = document.createElement('li');
-    li.textContent = m;
+    li.textContent = error.message;
     lista.appendChild(li);
   }
-  caja.hidden = false;
+  caja.hidden = errores.length === 0;
 }
 
 function pintarQr(url) {
   const contenedor = $('qr');
   contenedor.textContent = '';
-  const img = document.createElement('img');
-  img.width = 148;
-  img.height = 148;
-  img.alt = 'Código QR tributario de la factura';
   try {
-    const qr = qrcode(0, 'M'); // versión automática, corrección M
+    const qr = qrcode(0, 'M'); // versión automática, corrección M (estándar en facturación)
     qr.addData(url);
     qr.make();
+    const img = document.createElement('img');
+    img.width = 148;
+    img.height = 148;
+    img.alt = 'Código QR tributario de la factura';
     img.src = qr.createDataURL(4, 8);
+    contenedor.appendChild(img);
   } catch (e) {
-    img.remove();
     contenedor.textContent = 'No se ha podido dibujar el QR: ' + e.message;
-    return;
   }
-  contenedor.appendChild(img);
 }
 
-function generar(mostrarTodo = true) {
+function generar() {
   const campos = leerCampos();
-  const errores = [];
-  try {
-    const tipo = tipoNif(campos.nif);
-    if (!tipo) errores.push('[2001] El NIF tiene un formato erróneo o no es válido: ' + JSON.stringify(campos.nif.trim()));
-  } catch (e) { /* tipoNif no lanza */ }
-  try {
-    formatearImporte(campos.importe);
-  } catch (e) {
-    if (e instanceof QRError) errores.push(e.message);
-  }
-
-  let url = null;
-  try {
-    url = buildQrUrl(campos.nif, campos.numserie, campos.fecha, campos.importe, {
-      verifactu: campos.verifactu,
-      entorno: campos.entorno,
-    });
-  } catch (e) {
-    if (e instanceof QRError && !errores.includes(e.message)) errores.push(e.message);
-    else errores.push(e.message);
-  }
-
+  const { errores, valor } = validarCampos(campos);
   pintarErrores(errores);
-  if (!url) {
+
+  if (errores.length) {
     $('salida').hidden = true;
+    $('url').value = '';
+    $('qr').textContent = '';
+    $('pista').textContent = '';
+    $('abrir').removeAttribute('href');
     return;
   }
+
+  const url = buildQrUrl(valor.nif, valor.numserie, valor.fecha, valor.importe, {
+    verifactu: campos.verifactu,
+    entorno: campos.entorno,
+  });
+
   $('salida').hidden = false;
   $('url').value = url;
   $('abrir').href = urlConsultaJson(url);
   $('pista').textContent =
-    'NIF ' + tipoNif(campos.nif) + ' · importe normalizado ' + formatearImporte(campos.importe) + ' € · ' +
+    'NIF ' + tipoNif(valor.nif) + ' · importe normalizado ' + valor.importe + ' € · ' +
     (campos.verifactu ? 'VERI*FACTU' : 'No VERI*FACTU') + ' · ' + campos.entorno;
   pintarQr(url);
 }
@@ -97,23 +110,21 @@ form.addEventListener('submit', (evento) => {
   generar();
 });
 
-for (const id of ['nif', 'numserie', 'fecha', 'importe', 'entorno', 'verifactu']) {
-  $(id).addEventListener('input', () => generar());
-  $(id).addEventListener('change', () => generar());
+for (const id of [...CAMPOS, 'entorno', 'verifactu']) {
+  $(id).addEventListener('input', generar);
+  $(id).addEventListener('change', generar);
 }
 
 $('ejemplo').addEventListener('click', () => {
-  $('nif').value = '89890001K';
-  $('numserie').value = '12345678&G33';
-  $('fecha').value = '01-01-2024';
-  $('importe').value = '241,40';
+  const ejemplo = { nif: '89890001K', numserie: '12345678&G33', fecha: '01-01-2024', importe: '241,40' };
+  for (const [id, texto] of Object.entries(ejemplo)) $(id).value = texto;
   $('entorno').value = 'produccion';
   $('verifactu').value = 'true';
   generar();
 });
 
 $('limpiar').addEventListener('click', () => {
-  for (const id of ['nif', 'numserie', 'fecha', 'importe']) $(id).value = '';
+  for (const id of CAMPOS) $(id).value = '';
   $('salida').hidden = true;
   pintarErrores([]);
 });
@@ -123,7 +134,7 @@ $('copiar').addEventListener('click', async () => {
   try {
     await navigator.clipboard.writeText($('url').value);
     boton.textContent = 'Copiada';
-  } catch (e) {
+  } catch {
     $('url').select();
     boton.textContent = 'Selecciónala y copia';
   }
