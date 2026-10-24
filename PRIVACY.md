@@ -1,5 +1,7 @@
 # Política de privacidad — VeriFactu QR
 
+**Versión publicada (URL para las tiendas): <https://caseroclaw.github.io/privacidad/>**
+
 **Resumen: la extensión no recoge, transmite ni almacena ningún dato personal.**
 
 ## Qué datos trata
